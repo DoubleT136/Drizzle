@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<style>
+.btn-group {
+    position:absolute;
+  top:10px;
+  left:10px;
+    width: 100%;
+    position: absolute;
+
+    }
+
+.bottom-group {
+   position:absolute;
+  bottom:10px;
+  left:10px;
+    width: 100%;
+}
+body {
+  background: #222;
+  margin: auto;
+  width: 960px;
+}
+
+.arc-text {
+  font: 16px sans-serif;
+}
+
+.arc-center {
+  fill: none;
+}
+
+.tooltip_vis {
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  background-color: rgba(200, 200, 200, .6);
+  border:1px solid rgb(100, 100, 100);
+  text-align: center;
+  vertical-align:middle;
+
+  }
+
+#credit {
+  position: absolute;
+  font: 10px sans-serif;
+  right: 10px;
+  bottom: 10px;
+  color: #ddd;
+}
+
+#credit a {
+  color: inherit;
+}
+
+</style>
+<div id="credit">Inspired by <a href="http://blog.pixelbreaker.com/polarclock/">pixelbreaker</a>.</div>
+<script src="//d3js.org/d3.v3.min.js"></script>
+
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="btn-group">
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Add Ambiance <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a href="#" id="fire">Fire</a></li>
+    <li><a href="#" id="forest">Forest</a></li>
+    <li><a href="#" id="water">Water</a></li>
+    <li><a href="#" id="wind">Wind</a></li>
+  </ul>
+</div>
+<!-- /btn-group -->
+<!-- 
+<div class="dropdown" id="myDropdown">
+  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Add Ambiance
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li><a href="#" id="fire">Fire</a></li>
+    <li><a href="#" id="forest">Forest</a></li>
+    <li><a href="#" id="water">Water</a></li>
+    <li><a href="#" id="wind">Wind</a></li>
+  </ul>
+</div> -->
+
+<div class="bottom-group">
+<button id="download" class="btn">Download My Ambiance</button>
+</div>
+
+<script src="polar_music.js"></script>
+
+</body>
