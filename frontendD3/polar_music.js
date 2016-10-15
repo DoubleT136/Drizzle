@@ -21,7 +21,104 @@ function getId() {
 	return id
 }
 
+/*
+fire
+forest
+water
+wind
+*/
 
+
+var current_level = 0
+
+var optionLevelDict = {}
+function next_level(name) {
+	if (optionLevelDict[name])
+		return optionLevelDict[name]
+	else {
+		current_level += 1
+		optionLevelDict[name] = current_level
+		return current_level
+
+	}
+}
+
+function random_angle() {
+	return Math.random() * tau
+}
+
+var optionsDict = {
+	fire: function() {
+		return {
+	        name: "fire",
+	        level: next_level("fire"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "green",
+	        id: getId()
+		}
+	},
+	forest: function() {
+		return {
+	        name: "forest",
+	        level: next_level("forest"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "blue",
+	        id: getId()
+		}
+	},
+	water: function() {
+		return {
+	        name: "water",
+	        level: next_level("water"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "purple",
+	        id: getId()
+		}
+	},
+	wind: function() {
+		return {
+	        name: "wind",
+	        level: next_level("wind"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "orange",
+	        id: getId()
+		}
+	}
+}
+
+$("#water").click(function(e){
+	var waterObj = optionsDict.water()
+	addGroups([waterObj])
+	console.log("water");
+});
+
+
+$("#wind").click(function(e){
+	var windObj = optionsDict.wind()
+	addGroups([windObj])
+	console.log("water");
+});
+
+
+$("#forest").click(function(e){
+	var forestObj = optionsDict.forest()
+	addGroups([forestObj])
+	console.log("water");
+});
+
+
+$("#fire").click(function(e){
+	var fireObj = optionsDict.fire()
+	addGroups([fireObj])
+	console.log("water");
+});
+
+var data = []
+/*
 var data = [
     {
         name: "drizzle",
@@ -31,14 +128,7 @@ var data = [
         color: "red",
         id: getId()
     },
-    {
-        name: "fire",
-        level: 2,
-        angle: 2,
-        dAngle: 1,
-        color: "green",
-        id: getId()
-    },
+
     {
         name: "fire",
         level: 3,
@@ -56,8 +146,8 @@ var data = [
         id: getId()
     }
 ]
-
-
+*/
+/*
 var data2 = [
     {
         name: "cdscd",
@@ -100,13 +190,13 @@ var data2 = [
         id: getId()
     }
 ]
-
+*/
 
 
 // add tool tip
 var tooltip = d3.select("body")
 	.append("div")
-	.attr("class", "tooltip")
+	.attr("class", "tooltip_vis")
 	.style("position", "absolute")
 	.style("z-index", "10")
 	.style("visibility", "hidden")
@@ -152,6 +242,22 @@ var arcGroups = arcGroup.selectAll("g")
 updateArcGroups(arcGroups)
 
 
+function addGroups(newGroups) {
+	data = data.concat(newGroups)
+
+	var arcGroups = arcGroup.selectAll("g")
+		.data(data).enter()
+		.append("g")
+
+	console.log("ARC GROUP: ", data)
+	updateArcGroups(arcGroups)
+}
+/*
+addGroups(data2)
+
+console.log(data, data2)
+
+*/
 
 
 
@@ -176,6 +282,7 @@ function updateArcGroups(arcGroups) {
 			})
 			.on("mousemove", function(){
 				return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
+							   .style("visibility", "visible")
 							  .text(d.name)
 			})
 			.on("mouseout", function(){
@@ -228,20 +335,7 @@ function updateArcGroups(arcGroups) {
 	})
 }
 
-function addGroups(newGroups) {
-	data = data.concat(newGroups)
 
-	var arcGroups = arcGroup.selectAll("g")
-		.data(data).enter()
-		.append("g")
-
-	console.log("ARC GROUP: ", data)
-	updateArcGroups(arcGroups)
-}
-
-addGroups(data2)
-
-console.log(data, data2)
 
 
 function transitionArcCircle(angle, arcPath, circle) { 
