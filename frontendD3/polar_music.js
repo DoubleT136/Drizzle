@@ -1,5 +1,5 @@
-var w = 600//window.innerWidth,
-    h = 600 //window.innerHeight
+var w = 500//window.innerWidth,
+    h = 500 //window.innerHeight
 
 var maxTime = 30
 
@@ -21,92 +21,120 @@ function getId() {
 	return id
 }
 
-
-var data = [
-    {
-        name: "drizzle",
-        level: 1,
-        angle: 1,
-        dAngle: 1,
-        color: "red",
-        id: getId()
-    },
-    {
-        name: "fire",
-        level: 2,
-        angle: 2,
-        dAngle: 1,
-        color: "green",
-        id: getId()
-    },
-    {
-        name: "fire",
-        level: 3,
-        angle: 2,
-        dAngle: 1,
-        color: "blue",
-        id: getId()
-    },
-    {
-        name: "fire",
-        level: 4,
-        angle: 2,
-        dAngle: 1,
-        color: "orange",
-        id: getId()
-    }
-]
+$("#download").on("click", function(e){
+	console.log(data)
+});
 
 
-var data2 = [
-    {
-        name: "cdscd",
-        level: 1,
-        angle: 1,
-        dAngle: 1,
-        color: "red",
-        id: getId()
-    },
-    {
-        name: "fds",
-        level: 2,
-        angle: 2,
-        dAngle: 1,
-        color: "green",
-        id: getId()
-    },
-    {
-        name: "rtewew",
-        level: 3,
-        angle: 2,
-        dAngle: 1,
-        color: "blue",
-        id: getId()
-    },
-    {
-        name: "jtyrh",
-        level: 4,
-        angle: 2,
-        dAngle: 1,
-        color: "orange",
-        id: getId()
-    },
-    {
-        name: "jtyrh",
-        level: 5,
-        angle: 3,
-        dAngle: 1,
-        color: "purple",
-        id: getId()
-    }
-]
+/***********************************************************
+ *      Code for Handling Names and Creating Options       *
+ ***********************************************************/
 
+var current_level = 0
+
+var optionLevelDict = {}
+function next_level(name) {
+	if (optionLevelDict[name])
+		return optionLevelDict[name]
+	else {
+		current_level += 1
+		optionLevelDict[name] = current_level
+		return current_level
+
+	}
+}
+
+function random_angle() {
+	return Math.random() * tau
+}
+
+var optionsDict = {
+	fire: function() {
+		return {
+	        name: "fire",
+	        level: next_level("fire"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "green",
+	        id: getId(),
+	        intensity: 1
+		}
+	},
+	forest: function() {
+		return {
+	        name: "forest",
+	        level: next_level("forest"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "blue",
+	        id: getId(),
+	        intensity: 1
+		}
+	},
+	water: function() {
+		return {
+	        name: "water",
+	        level: next_level("water"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "purple",
+	        id: getId(),
+	        intensity: 1
+		}
+	},
+	wind: function() {
+		return {
+	        name: "wind",
+	        level: next_level("wind"),
+	        angle: random_angle(),
+	        dAngle: 1,
+	        color: "orange",
+	        id: getId(),
+	        intensity: 1
+		}
+	}
+}
+
+$("#water").click(function(e){
+	var waterObj = optionsDict.water()
+	addGroups([waterObj])
+	console.log("water");
+});
+
+
+$("#wind").click(function(e){
+	var windObj = optionsDict.wind()
+	addGroups([windObj])
+	console.log("water");
+});
+
+
+$("#forest").click(function(e){
+	var forestObj = optionsDict.forest()
+	addGroups([forestObj])
+	console.log("water");
+});
+
+
+$("#fire").click(function(e){
+	var fireObj = optionsDict.fire()
+	addGroups([fireObj])
+	console.log("water");
+});
+
+var data = []
+
+
+
+/***********************************************************
+ *      Code for Building Visualization                    *
+ ***********************************************************/
 
 
 // add tool tip
 var tooltip = d3.select("body")
 	.append("div")
-	.attr("class", "tooltip")
+	.attr("class", "tooltip_vis")
 	.style("position", "absolute")
 	.style("z-index", "10")
 	.style("visibility", "hidden")
@@ -126,8 +154,6 @@ var arcGroup = svg.append("svg:g")
 	);
 
 
-
-
 var arc = d3.svg.arc()
 	.innerRadius(innerRadius)
 	.outerRadius(outerRadius)
@@ -135,16 +161,6 @@ var arc = d3.svg.arc()
 	.endAngle(function(d) {return d.angle + d.dAngle})
 	.padRadius(4)
 
-// var arcGroups = arcGroup.selectAll("g")
-// 	.data(data).enter()
-// 	.append("g")
-
-// create arc path
-// var arcPaths = arcGroup.selectAll("path")
-// 	.data(data).enter()
-// 	.append("path")
-
-// arcPaths
 
 var arcGroups = arcGroup.selectAll("g")
 	.data(data).enter()
@@ -152,15 +168,22 @@ var arcGroups = arcGroup.selectAll("g")
 updateArcGroups(arcGroups)
 
 
+function addGroups(newGroups) {
+	data = data.concat(newGroups)
+
+	var arcGroups = arcGroup.selectAll("g")
+		.data(data).enter()
+		.append("g")
+
+	console.log("ARC GROUP: ", data)
+	updateArcGroups(arcGroups)
+}
+
 
 
 
 function updateArcGroups(arcGroups) {
 	arcGroups.each(function(d) {
-		// console.log(d)
-		// console.log(d3.select(d))
-		// console.log(this)
-		// console.log(d3.select(this))
 
 		var angle = d.angle + d.dAngle 
 		var rMean = (outerRadius(d) + innerRadius(d))/2
@@ -176,21 +199,13 @@ function updateArcGroups(arcGroups) {
 			})
 			.on("mousemove", function(){
 				return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px")
+							   .style("visibility", "visible")
 							  .text(d.name)
 			})
 			.on("mouseout", function(){
 				return tooltip.style("visibility", "hidden");
 			});
 
-		// path.append("text")
-		//     .attr("dy", ".35em")
-		//     .attr("dx", ".75em")
-		//     .style("text-anchor", "start")
-		//   .append("textPath")
-		//     .attr("startOffset", "50%")
-		//     .attr("class", "arc-text")
-		//     .text(function(d) { return d.name; });
-		//     //.attr("xlink:href", function(d, i) { return "#arc-center-" + i; });
 
 		var circle = d3.select(this).append("circle")
 			.attr("cx", getXfromAngleRadius(angle, rMean))
@@ -228,20 +243,7 @@ function updateArcGroups(arcGroups) {
 	})
 }
 
-function addGroups(newGroups) {
-	data = data.concat(newGroups)
 
-	var arcGroups = arcGroup.selectAll("g")
-		.data(data).enter()
-		.append("g")
-
-	console.log("ARC GROUP: ", data)
-	updateArcGroups(arcGroups)
-}
-
-addGroups(data2)
-
-console.log(data, data2)
 
 
 function transitionArcCircle(angle, arcPath, circle) { 
@@ -260,48 +262,20 @@ function transitionArcCircle(angle, arcPath, circle) {
 
 // animate function
 function arcTweenandCircleTween(transition, newAngle, arcPath, circle) {
-  //console.log('newAngle:', newAngle);
-  // arc path transition
- //	var roundTop = false
-  // arcPath.each(function(d) {
-  // 	if (d.angle + d.dAngle > tau - .2 && newAngle > 0) {
-  // 		console.log("FOUND BAD", d.angle + d.dAngle, newAngle)
-  // 		d.angle = newAngle
-  // 		moveCircle(anglePoint, circle)
-  // 		roundTop = true
-
-  // 	}
-  // })
-
-  //if (roundTop) return
-  // if (newAngle == 0) {
-  // 	d.angle = 0
-  // 	moveCircle(0, circle)
-  // }
-
 
 
 
 	transition.attrTween("d", function(d) {
-		// if (d.angle + d.dAngle > 3/4 * tau && newAngle > 0 && newAngle < 1/4 * tau) {
-		// 	var interpolateToTau = d3.interpolate
-
-		// }
-
-		//else {
-			var interpolate = d3.interpolate(d.angle + d.dAngle, newAngle);
-			return function(t) {
-			    d.angle = interpolate(t) - d.dAngle;
-			            
-			      // transalte circle
-			    anglePoint = d.angle + d.dAngle;
-			      //console.log(anglePoint)
-			    moveCircle(anglePoint, circle);
-			      
-			    return arc(d);
-			
-		//}
-
+		var interpolate = d3.interpolate(d.angle + d.dAngle, newAngle);
+		return function(t) {
+		    d.angle = interpolate(t) - d.dAngle;
+		            
+		      // transalte circle
+		    anglePoint = d.angle + d.dAngle;
+		      //console.log(anglePoint)
+		    moveCircle(anglePoint, circle);
+		      
+		    return arc(d);
 		};
 	});
 }
@@ -346,17 +320,3 @@ function getXfromAngleRadius(angle, r) {
 function getYfromAngleRadius(angle, r) {
     return Math.cos(angle) * -r
 }
-//   .attr("fill", "#ffffff")
-//   .attr("stroke", "red")
-//   .attr("stroke-width", circleRadius/2 + 2)
-
-//   .attr("cursor", "move")
-//   .call( d3.behavior.drag().on('drag', function(){
-//     console.log(this)
-//     var angle = findAngle(d3.event.x, d3.event.y);
-//     setAngle(angle);
-    
-//     // moveCircle(a);
-//   }) )
-
-

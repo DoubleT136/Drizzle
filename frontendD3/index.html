@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <style>
- .btn-group {
+.btn-group {
     position:absolute;
   top:10px;
   left:10px;
@@ -15,6 +15,13 @@
     position: absolute;
 
     }
+
+.bottom-group {
+   position:absolute;
+  bottom:10px;
+  left:10px;
+    width: 100%;
+}
 body {
   background: #222;
   margin: auto;
@@ -29,7 +36,7 @@ body {
   fill: none;
 }
 
-.tooltip {
+.tooltip_vis {
   padding-right: 20px;
   padding-top: 20px;
   padding-left: 20px;
@@ -69,14 +76,15 @@ body {
 <body>
 
 <div class="btn-group">
-  <button class="btn dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+  <button class="btn dropdown-toggle" data-toggle="dropdown">Add Ambiance <span class="caret"></span></button>
   <ul class="dropdown-menu">
     <li><a href="#" id="fire">Fire</a></li>
     <li><a href="#" id="forest">Forest</a></li>
     <li><a href="#" id="water">Water</a></li>
     <li><a href="#" id="wind">Wind</a></li>
   </ul>
-</div><!-- /btn-group -->
+</div>
+<!-- /btn-group -->
 <!-- 
 <div class="dropdown" id="myDropdown">
   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Add Ambiance
@@ -89,7 +97,10 @@ body {
   </ul>
 </div> -->
 
+<div class="bottom-group">
+<button id="download" class="btn">Download My Ambiance</button>
+</div>
+
 <script src="polar_music.js"></script>
 
-<span id="vis"></>
 </body>
