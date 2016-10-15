@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from pydub import AudioSegment
 import json
-
+from django.views.decorators.csrf import csrf_exempt
 def add_to_audio(original, overlaid, shift, vol):
     return original.overlay(AudioSegment.silent(1000 * shift) + overlaid.apply_gain(vol))
 
@@ -19,6 +19,8 @@ def build_mp3(data, export_name):
     track.export(export_name, format="mp3")
     return
 
+
+@csrf_exempt
 def index(request):
     if request.method == 'POST':
         if request.is_ajax():
@@ -26,3 +28,7 @@ def index(request):
             build_mp3(data, "test.mp3")
             return JsonResponse({"hi":"hey"})
     return render(request,'index.html')
+
+
+def drizzle(request):
+    return render(request, 'static/drizzle.html')
