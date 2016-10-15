@@ -14,7 +14,7 @@ def build_mp3(data, export_name):
 	track = add_to_audio(track, AudioSegment.from_mp3(arc['filename']), arc['theta'], arc['intensity'])
 	if arc['theta'] + arc['dtheta'] > parsed_data['total_time']:
             track = add_rem_audio(track, AudioSegment.from_mp3(arc['filename']), 1000 * (arc['theta'] + arc['dtheta'] - parsed_data['total_time']), arc['intensity'])
-    track.export(filename, format="mp3")
+    track.export(export_name, format="mp3")
     return
 
-build_mp3('{"total_time":20, "arcs":[{{"filename": "forest.mp3"}, {"theta": 0}, {"dtheta": 5}, {"intensity": 1}}, {{"filename": "thunder.mp3"}, {"theta": 2}, {"dtheta": 5}, {"intensity": 1}}]}', "test.mp3")
+build_mp3('{"total_time":20, "arcs":[{"filename": "fire.mp3", "theta": 0, "dtheta": 5, "intensity": 1}, {"filename": "thunder.mp3", "theta": 2, "dtheta": 5, "intensity": 1}]}', "test.mp3")

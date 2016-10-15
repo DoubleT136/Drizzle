@@ -24,13 +24,13 @@
         //For doing AJAX post
         function submit() {
             //submit.preventDefault();
+            to_post = JSON.stringify({"total_time":20, "arcs":[{"filename": "media/fire.mp3", "theta": 0, "dtheta": 5, "intensity": 1}, {"filename": "media/thunder.mp3", "theta": 2, "dtheta": 5, "intensity": 1}]})
             var csrftoken = getCookie('csrftoken');
             $.ajax({
                 url : window.location.href, // the endpoint,commonly same url
                 type : "POST", // http method
                 data : { csrfmiddlewaretoken : csrftoken,
-                    "hi" : "hey"
-                }, // data sent with the post request
+                    postData:to_post}, // data sent with the post request
 
                 // handle a successful response
                 success : function(json) {

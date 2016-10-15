@@ -18,6 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', include('index.urls')),
-    url(r'^soundEngine', include('soundEngine.urls')),
     url(r'^admin/', admin.site.urls),
 ]
