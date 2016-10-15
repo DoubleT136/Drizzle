@@ -99,7 +99,8 @@ body {
 </div> -->
 
 <div class="bottom-group">
-<button id="download" class="btn">Download My Ambiance</button>
+<!-- <button id="download" class="btn">Download My Ambiance</button> -->
+<button id="bose" class="btn">Play Over Speakers</button>
 </div>
 </body>
 <script>
@@ -138,7 +139,7 @@ function getId() {
  *********************************************************/
 
 
-$("#download").on("click", function(e){
+$("#bose").on("click", function(e){
     var serverItems = data.map(function(d) {
       return { 
         name: d.name,
@@ -163,9 +164,8 @@ $("#download").on("click", function(e){
 
         // handle a successful response
         success : function(response) {
-          var audioData = response;
-          response.setContentType("audio/mp3");
-          console.log(response);
+          var audioData = new Audio(response);
+          audio.play();
           //audioCtx.decodeAudioData(audioData, function(response) {
         
               /*source.buffer = buffer;
@@ -188,6 +188,53 @@ $("#download").on("click", function(e){
 
 });
 
+$("#bose").on("click", function (p1) {
+    var serverItems = data.map(function(p2) {
+      return {
+        name: p2.name,
+        timeStart : p2.angle * secondsPerAngle,
+        timeDuration : p2.dAngle  * secondsPerAngle,
+        intensity: p2.intensity 
+      }
+    })
+
+    var serverData = {
+      total_time: maxTime,
+      arcs: serverItems
+    }
+
+    stringItems = JSON.stringify(serverData)
+
+
+    $.ajax({
+        url : window.location.href, // the endpoint,commonly same url
+        type : "POST", // http method
+        data : { post_data: stringItems}, // data sent with the post request
+
+        // handle a successful response
+        success : function(response) {
+          
+          //audioCtx.decodeAudioData(audioData, function(response) {
+        
+              /*source.buffer = buffer;
+
+              source.connect(audioCtx.destination);
+              source.loop = true;
+              source.start(0);*/
+          //})
+        },
+
+
+      
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            alert("failutre");
+        }
+    });
+
+
+});
 
 function success(response) {
   console.log(response)
