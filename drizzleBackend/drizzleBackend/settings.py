@@ -59,6 +59,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'drizzleBackend.urls'
+STATIC_URL = '/static/'
 
 TEMPLATES = [
     {
@@ -76,6 +77,13 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.contrib.messages.context_processors.messages")
 
 WSGI_APPLICATION = 'drizzleBackend.wsgi.application'
 
@@ -127,6 +135,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_DIRS = ['/static/']
-STATIC_ROOT = '/static/'
+# STATIC_DIRS = ['/static/']
+# STATIC_ROOT = '/static/'
