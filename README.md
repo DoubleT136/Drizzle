@@ -11,4 +11,4 @@ To use the app, make sure that you have Python, Django, and FFmpeg (https://www.
 Navigate to http://localhost:8000. To add a sound, click "Add Ambiance" on the top left. Then, you can drag the track along the ring to control when it's played. The interface works like a clock, and the track starts at 12 o'clock and plays clockwise. Multiple tracks can be added on the same ring. Overlay different tracks to combine them. You can also click on a track to change the volume, with dimmer being quieter and brighter being louder. Once you are done, click the buttons on the bottom-left to play in broswer or download the track.
 
 #Notes regarding the Bose API
-To see the implementation for the Bose API, navigate to the Bose-version branch. It uses the Bose Soundtouch 10 API, and is currently not available to the public.
+To see the implementation for the Bose API, navigate to the Bose-version branch. It uses the Bose Soundtouch 10 API, which is currently not available to the public.
