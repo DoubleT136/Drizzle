@@ -70,11 +70,10 @@ body {
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+<title>drizzle</title>
 </head>
 
 <body>
-
 <div class="btn-group">
   <button class="btn dropdown-toggle" data-toggle="dropdown">Add Ambiance <span class="caret"></span></button>
   <ul class="dropdown-menu">
@@ -86,7 +85,7 @@ body {
   </ul>
 </div>
 <!-- /btn-group -->
-<!-- 
+<!--
 <div class="dropdown" id="myDropdown">
   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Add Ambiance
   <span class="caret"></span></button>
@@ -99,8 +98,8 @@ body {
 </div> -->
 
 <div class="bottom-group">
-<!-- <button id="download" class="btn">Download My Ambiance</button> -->
-<button id="bose" class="btn">Play Over Speakers</button>
+<button id="download" class="btn">Download My Ambiance</button>
+<button id="play" class = "btn">Play in browser</button>
 </div>
 </body>
 <script>
@@ -138,14 +137,55 @@ function getId() {
  *       Code for Making Requests to Server
  *********************************************************/
 
+$("#play").on("click", function(e) {
+  var serverItems = data.map(function(d) {
+    return {
+      name: d.name,
+      timeStart : d.angle * secondsPerAngle,
+      timeDuration : d.dAngle  * secondsPerAngle,
+      intensity: d.intensity
+    }
+  })
 
-$("#bose").on("click", function(e){
+  var serverData = {
+    total_time: maxTime,
+    arcs: serverItems
+  }
+
+  stringItems = JSON.stringify(serverData)
+
+
+  $.ajax({
+      url : window.location.href, // the endpoint,commonly same url
+      type : "POST", // http method
+      data : { post_data: stringItems}, // data sent with the post request
+
+      // handle a successful response
+      success : function(response) {
+        if (document.getElementById("audio_control")) {
+          $("#audio_control").remove();
+        }
+        var x = document.createElement("AUDIO");
+        if (x.canPlayType("audio/mpeg")) {
+          x.setAttribute("src","http://localhost:5000/sample.mp3");
+          x.setAttribute("id","audio_control");
+        }
+        x.setAttribute("controls", "controls");
+        document.body.appendChild(x);
+      },
+      // handle a non-successful response
+      error : function(xhr,errmsg,err) {
+          alert("failutre");
+      }
+  });
+})
+$("#download").on("click", function(e){
     var serverItems = data.map(function(d) {
-      return { 
+      return {
         name: d.name,
         timeStart : d.angle * secondsPerAngle,
         timeDuration : d.dAngle  * secondsPerAngle,
-        intensity: d.intensity 
+        intensity: d.intensity
       }
     })
 
@@ -164,77 +204,35 @@ $("#bose").on("click", function(e){
 
         // handle a successful response
         success : function(response) {
-          var audioData = new Audio(response);
-          audio.play();
-          //audioCtx.decodeAudioData(audioData, function(response) {
-        
-              /*source.buffer = buffer;
-
-              source.connect(audioCtx.destination);
-              source.loop = true;
-              source.start(0);*/
-          //})
+          console.log(response);
+          //var blob = new Blob([response], {type: 'audio/mp3'});
+          //Create a link element, hide it, direct
+          //it towards the blob, and then 'click' it programatically
+          let a = document.createElement("a");
+          a.style = "display: none";
+          document.body.appendChild(a);
+          //Create a DOMString representing the blob
+          //and point the link element towards it
+          //let url = window.URL.createObjectURL(blob);
+          let url = response;
+          a.href = url;
+          a.download = 'sample.mp3';
+          //programatically click the link to trigger the download
+          a.click();
+          //release the reference to the file by revoking the Object URL
+          window.URL.revokeObjectURL(url);
         },
 
 
-      
+
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             alert("failutre");
         }
     });
-
-
 });
 
-$("#bose").on("click", function (p1) {
-    var serverItems = data.map(function(p2) {
-      return {
-        name: p2.name,
-        timeStart : p2.angle * secondsPerAngle,
-        timeDuration : p2.dAngle  * secondsPerAngle,
-        intensity: p2.intensity 
-      }
-    })
-
-    var serverData = {
-      total_time: maxTime,
-      arcs: serverItems
-    }
-
-    stringItems = JSON.stringify(serverData)
-
-
-    $.ajax({
-        url : window.location.href, // the endpoint,commonly same url
-        type : "POST", // http method
-        data : { post_data: stringItems}, // data sent with the post request
-
-        // handle a successful response
-        success : function(response) {
-          
-          //audioCtx.decodeAudioData(audioData, function(response) {
-        
-              /*source.buffer = buffer;
-
-              source.connect(audioCtx.destination);
-              source.loop = true;
-              source.start(0);*/
-          //})
-        },
-
-
-      
-
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            alert("failutre");
-        }
-    });
-
-
-});
 
 function success(response) {
   console.log(response)
@@ -385,7 +383,7 @@ var svg = d3.select("body").append("svg:svg")
 // create arc group
 var arcGroup = svg.append("svg:g")
   .attr(
-    "transform", 
+    "transform",
     "translate(" + w / 2 + "," + h / 2 + ")"
   );
 
@@ -422,10 +420,10 @@ function updateArcGroups(arcGroups) {
   arcGroups.each(function(d) {
     var wrapGroup = d3.select(this)
 
-    var angle = d.angle + d.dAngle 
+    var angle = d.angle + d.dAngle
     var rMean = (outerRadius(d) + innerRadius(d))/2
 
-      //.attr("stroke-width", circleRadius/2 + 2) 
+      //.attr("stroke-width", circleRadius/2 + 2)
 
     var path = wrapGroup.append("path")
       .style("fill", function(d) {return d.color})
@@ -453,7 +451,7 @@ function updateArcGroups(arcGroups) {
         d3.select(this).attr("r", circleRadius * 1.3)
         return tooltip.style("visibility", "visible")
                 .text(d.name)
-                
+
       })
       .on("mousemove", function(){
         d3.select(this).attr("r", circleRadius * 1.3)
@@ -467,7 +465,7 @@ function updateArcGroups(arcGroups) {
       /*.on("click", function() {
         wrapGroup
       })*/
-    
+
     wrapGroup.on("click", function(d) {
       if (d.intensity > .7) d.intensity = 0.4
       else if(d.intensity > 0.4) d.intensity = 1
@@ -475,7 +473,7 @@ function updateArcGroups(arcGroups) {
       wrapGroup.attr("opacity", d.intensity)
     })
 
-    
+
     wrapGroup.attr("opacity", d.intensity)
 
 
@@ -495,7 +493,7 @@ function updateArcGroups(arcGroups) {
 
 
 
-function transitionArcCircle(angle, arcPath, circle) { 
+function transitionArcCircle(angle, arcPath, circle) {
 
 
     arcPath.transition()
@@ -503,7 +501,7 @@ function transitionArcCircle(angle, arcPath, circle) {
     .ease("linear")
     .call(
       arcTweenandCircleTween,
-      angle, 
+      angle,
       arcPath,
       circle
     );
@@ -518,12 +516,12 @@ function arcTweenandCircleTween(transition, newAngle, arcPath, circle) {
     var interpolate = d3.interpolate(d.angle + d.dAngle, newAngle);
     return function(t) {
         d.angle = interpolate(t) - d.dAngle;
-                
+
           // transalte circle
         anglePoint = d.angle + d.dAngle;
           //console.log(anglePoint)
         moveCircle(anglePoint, circle);
-          
+
         return arc(d);
     };
   });
@@ -549,7 +547,7 @@ function moveCircle(angle, circle) {
 
 function findAngle(x, y) {
     var addAngle = x < 0 ? 270 : 90;
-    var angle360 = (Math.atan(y/x) * 180 / Math.PI) + addAngle; 
+    var angle360 = (Math.atan(y/x) * 180 / Math.PI) + addAngle;
     return angle360 / 360 * tau
 }
 
@@ -572,6 +570,6 @@ function getYfromAngleRadius(angle, r) {
 
 
 </script>
-<!-- 
+<!--
 </body>
  -->

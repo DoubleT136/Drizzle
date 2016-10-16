@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from pydub import AudioSegment
-import requests
 import json
 import os
 from django.views.decorators.csrf import csrf_exempt
@@ -41,35 +40,17 @@ def index(request):
             print(request.POST.items())
             data = request.POST.get('post_data')
             build_mp3(data, "sample.mp3")
+            #fname="sample.mp3"
+            #f = open(fname,"rb")
+            #response = HttpResponse()
+            #response.write(f.read())
+            #response['Content-Type'] ='audio/mp3'
+            #response['Content-Length'] =os.path.getsize(fname )
+            return HttpResponse("http://localhost:5000/sample.mp3")
 
-            print("Running post")
-            headers = {'Content-Type': 'application/xml'}
-            speaker = 'http://192.168.0.101:8090/speaker'
-
-            requests.post(speaker, data=get_xml(), headers=headers)
-            # fname="sample.mp3"
-            # f = open(fname,"rb")
-            # response = HttpResponse()
-            # response.write(f.read())
-
-            # response['Content-Type'] ='audio/mp3'
-            # response['Content-Length'] =os.path.getsize(fname )
-            #return response
-
-
-            return JsonResponse({"hi":"hey"})
     return render(request,'index.html')
 
-def get_xml():
-    xml_data = """
-    <?xml version="1.0"?>
-    <play_info>
-        <app_key>0</app_key>
-        <url>http://192.168.0.104:5000/sample.mp3</url>
-        <service>foo</service>
-    </play_info>
-    """
-    return xml_data
+
 #def script(request):
 
 
